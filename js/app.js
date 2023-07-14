@@ -1,5 +1,7 @@
 let app;
 let player;
+let keys = {};
+let keysDiv;
 
 window.onload = function() {
     app = new PIXI.Application({
@@ -21,13 +23,48 @@ window.onload = function() {
     app.stage.addChild(player);
 
     /** Интерактивность мыши */
-    app.stage.interactive = true;
-    app.stage.on("pointermove", movePlayer);
+    // app.stage.interactive = true;
+    // app.stage.on("pointermove", movePlayer);
+
+    window.addEventListener('keydown', keyDown);
+    window.addEventListener('keyup', keyUp);
+
+    
+    app.ticker.add(gameLoop);
+
+    // TODO: delete later
+    keysDiv = document.querySelector("#keys");
 };
 
-function movePlayer(e) {
-    let position = e.data.global;
-
-    player.x = position.x
-    player.y = position.y
+function keyDown(e) {
+    console.log(e.key)
+    keys[e.key] = true;
 }
+
+function keyUp(e) {
+    console.log(e.key)
+    keys[e.key] = false;
+}
+
+function gameLoop() {
+    keysDiv.innerHTML = JSON.stringify(keys);
+
+    if (keys['ArrowRight'] || keys['d']) {
+        player.x += 5
+    }
+    if (keys['ArrowLeft'] || keys['a']) {
+        player.x -= 5
+    }
+    if (keys['ArrowUp'] || keys['w']) {
+        player.y -= 5
+    }
+    if (keys['ArrowDown'] || keys['s']) {
+        player.y += 5
+    }
+}
+// function movePlayer(e) {
+//     let position = e.data.global;
+
+//     player.x = position.x
+//     player.y = position.y
+// }
